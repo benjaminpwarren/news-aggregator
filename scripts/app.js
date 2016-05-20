@@ -304,9 +304,11 @@ APP.Main = (function() {
 
     colorizeAndScaleStories();
 
-    header.style.height = (156 - scrollTopCapped) + 'px';
-    headerTitles.style.webkitTransform = scaleString;
-    headerTitles.style.transform = scaleString;
+    if (scrollTopCapped < 70) {
+      header.style.height = (156 - scrollTopCapped) + 'px';
+      headerTitles.style.webkitTransform = scaleString;
+      headerTitles.style.transform = scaleString;
+    }
 
     // Add a shadow to the header.
     if (main.scrollTop > 70)
