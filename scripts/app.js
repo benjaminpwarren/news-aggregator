@@ -259,8 +259,16 @@ APP.Main = (function() {
       // Base the scale on the y position of the score.
       var height = main.offsetHeight;
       var mainPosition = main.getBoundingClientRect();
-      var scoreLocation = score.getBoundingClientRect().top -
-          document.body.getBoundingClientRect().top;
+
+      var scorePosition = score.getBoundingClientRect();
+      var bodyPosition = document.body.getBoundingClientRect()
+
+      //skip elements that aren't visible
+      if (scorePosition.top > bodyPosition.bottom ||
+          scorePosition.top < bodyPosition.top)
+        continue;
+
+      var scoreLocation = scorePosition.top - bodyPosition.top;
       var scale = Math.min(1, 1 - (0.05 * ((scoreLocation - 170) / height)));
       var opacity = Math.min(1, 1 - (0.5 * ((scoreLocation - 170) / height)));
 
