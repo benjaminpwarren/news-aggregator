@@ -320,7 +320,10 @@ APP.Main = (function() {
 
     storyLoadCount = count;
 
+    var mainFrag = document.createDocumentFragment();
+
     var end = storyStart + count;
+
     for (var i = storyStart; i < end; i++) {
 
       if (i >= stories.length)
@@ -336,10 +339,12 @@ APP.Main = (function() {
         by: '...',
         time: 0
       });
-      main.appendChild(story);
+      mainFrag.appendChild(story);
 
       APP.Data.getStoryById(stories[i], onStoryData.bind(this, key));
     }
+
+    main.appendChild(mainFrag);
 
     storyStart += count;
 
