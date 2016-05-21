@@ -84,9 +84,6 @@ APP.Main = (function() {
       }
     }
 
-    // Colorize on complete.
-    if (storyLoadCount === 0)
-      colorizeAndScaleStories();
   }
 
   function onStoryClick(details) {
@@ -240,51 +237,6 @@ APP.Main = (function() {
     requestAnimationFrame(animate);
   }
 
-  /**
-   * Does this really add anything? Can we do this kind
-   * of work in a cheaper way?
-   */
-  function colorizeAndScaleStories() {
-
-    var storyElements = document.querySelectorAll('.story');
-
-    var height = main.offsetHeight;
-    var mainPosition = main.getBoundingClientRect();
-    var bodyPosition = document.body.getBoundingClientRect();
-
-    // It does seem awfully broad to change all the
-    // colors every time!
-    for (var s = 0; s < storyElements.length; s++) {
-
-      var story = storyElements[s];
-      var score = story.querySelector('.story__score');
-      var title = story.querySelector('.story__title');
-
-      // Base the scale on the y position of the score.
-      var scorePosition = score.getBoundingClientRect();
-
-      //skip elements that aren't visible
-      if (scorePosition.top > bodyPosition.bottom ||
-          scorePosition.top < bodyPosition.top)
-        continue;
-
-      var scoreLocation = scorePosition.top - bodyPosition.top;
-      var scale = Math.min(1, 1 - (0.05 * ((scoreLocation - 170) / height)));
-      var opacity = Math.min(1, 1 - (0.5 * ((scoreLocation - 170) / height)));
-
-      var newWidth = (scale * 40);
-      score.style.width = newWidth + 'px';
-      score.style.height = newWidth + 'px';
-      score.style.lineHeight = newWidth + 'px';
-
-      // Now figure out how wide it is and use that to saturate it.
-      var saturation = (100 * ((newWidth - 38) / 2));
-
-      score.style.backgroundColor = 'hsl(42, ' + saturation + '%, 50%)';
-      title.style.opacity = opacity;
-    }
-  }
-
   main.addEventListener('touchstart', function(evt) {
 
     // I just wanted to test what happens if touchstart
@@ -301,8 +253,6 @@ APP.Main = (function() {
     var headerTitles = header.querySelector('.header__title-wrapper');
     var scrollTopCapped = Math.min(70, main.scrollTop);
     var scaleString = 'scale(' + (1 - (scrollTopCapped / 300)) + ')';
-
-    colorizeAndScaleStories();
 
     if (scrollTopCapped < 70) {
       header.style.height = (156 - scrollTopCapped) + 'px';
@@ -349,6 +299,10 @@ APP.Main = (function() {
         by: '...',
         time: 0
       });
+      // var storyWrapper = document.createElement('div');
+      // storyWrapper.classList.add('storyWrapper');
+      // storyWrapper.appendChild(story);
+      // mainFrag.appendChild(storyWrapper);
       mainFrag.appendChild(story);
 
       APP.Data.getStoryById(stories[i], onStoryData.bind(this, key));

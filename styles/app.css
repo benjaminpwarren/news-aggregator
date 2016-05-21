@@ -353,3 +353,8 @@ footer a {
   color: #666;
   font-weight: 500;
 }
+
+.story__score {
+  background: linear-gradient(to top, rgba(153, 138, 101, 1) 0%, rgba(255, 179, 0, 1) 100%);
+  background-attachment: fixed;
+}
