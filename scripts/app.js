@@ -33,6 +33,8 @@ APP.Main = (function() {
     }
   };
 
+  var storyDetails = $('#storyDetails');
+
   var tmplStory = $('#tmpl-story').textContent;
   var tmplStoryDetails = $('#tmpl-story-details').textContent;
   var tmplStoryDetailsComment = $('#tmpl-story-details-comment').textContent;
@@ -88,88 +90,72 @@ APP.Main = (function() {
 
   function onStoryClick(details) {
 
-    var storyDetails = $('sd-' + details.id);
-
     // Wait a little time then show the story details.
-    setTimeout(showStory.bind(this, details.id), 60);
+    setTimeout(showStory, 60);
 
     // Create and append the story. A visual change...
     // perhaps that should be in a requestAnimationFrame?
-    // And maybe, since they're all the same, I don't
-    // need to make a new element every single time? I mean,
-    // it inflates the DOM and I can only see one at once.
-    if (!storyDetails) {
 
-      if (details.url)
-        details.urlobj = new URL(details.url);
+    if (details.url)
+      details.urlobj = new URL(details.url);
 
-      var comment;
-      var commentsElement;
-      var storyHeader;
-      var storyContent;
+    var comment;
+    var commentsElement;
+    var storyHeader;
+    var storyContent;
 
-      var storyDetailsHtml = storyDetailsTemplate(details);
-      var kids = details.kids;
-      var commentHtml = storyDetailsCommentTemplate({
-        by: '', text: 'Loading comment...'
+    var storyDetailsHtml = storyDetailsTemplate(details);
+    var kids = details.kids;
+    var commentHtml = storyDetailsCommentTemplate({
+      by: '', text: 'Loading comment...'
+    });
+
+    storyDetails.innerHTML = storyDetailsHtml;
+
+    commentsElement = storyDetails.querySelector('.js-comments');
+    storyHeader = storyDetails.querySelector('.js-header');
+    storyContent = storyDetails.querySelector('.js-content');
+
+    var closeButton = storyDetails.querySelector('.js-close');
+    closeButton.addEventListener('click', hideStory);
+
+    var headerHeight = storyHeader.getBoundingClientRect().height;
+    storyContent.style.paddingTop = headerHeight + 'px';
+
+    if (typeof kids === 'undefined')
+      return;
+
+    for (var k = 0; k < kids.length; k++) {
+
+      comment = document.createElement('aside');
+      comment.setAttribute('id', 'sdc-' + kids[k]);
+      comment.classList.add('story-details__comment');
+      comment.innerHTML = commentHtml;
+
+      // Update the comment with the live data.
+      APP.Data.getStoryComment(kids[k], function(commentDetails) {
+
+        commentDetails.time *= 1000;
+
+        var comment = commentsElement.querySelector(
+            '#sdc-' + commentDetails.id);
+        comment.innerHTML = storyDetailsCommentTemplate(
+            commentDetails,
+            localeData);
       });
 
-      storyDetails = document.createElement('section');
-      storyDetails.setAttribute('id', 'sd-' + details.id);
-      storyDetails.classList.add('story-details');
-      storyDetails.innerHTML = storyDetailsHtml;
-
-      document.body.appendChild(storyDetails);
-
-      commentsElement = storyDetails.querySelector('.js-comments');
-      storyHeader = storyDetails.querySelector('.js-header');
-      storyContent = storyDetails.querySelector('.js-content');
-
-      var closeButton = storyDetails.querySelector('.js-close');
-      closeButton.addEventListener('click', hideStory.bind(this, details.id));
-
-      var headerHeight = storyHeader.getBoundingClientRect().height;
-      storyContent.style.paddingTop = headerHeight + 'px';
-
-      if (typeof kids === 'undefined')
-        return;
-
-      for (var k = 0; k < kids.length; k++) {
-
-        comment = document.createElement('aside');
-        comment.setAttribute('id', 'sdc-' + kids[k]);
-        comment.classList.add('story-details__comment');
-        comment.innerHTML = commentHtml;
-        commentsElement.appendChild(comment);
-
-        // Update the comment with the live data.
-        APP.Data.getStoryComment(kids[k], function(commentDetails) {
-
-          commentDetails.time *= 1000;
-
-          var comment = commentsElement.querySelector(
-              '#sdc-' + commentDetails.id);
-          comment.innerHTML = storyDetailsCommentTemplate(
-              commentDetails,
-              localeData);
-        });
-      }
+      commentsElement.appendChild(comment);
     }
-
   }
 
-  function showStory(id) {
+  function showStory() {
 
     if (inDetails)
       return;
 
     inDetails = true;
 
-    var storyDetails = $('#sd-' + id);
     var left = null;
-
-    if (!storyDetails)
-      return;
 
     document.body.classList.add('details-active');
     storyDetails.style.opacity = 1;
@@ -200,12 +186,11 @@ APP.Main = (function() {
     requestAnimationFrame(animate);
   }
 
-  function hideStory(id) {
+  function hideStory() {
 
     if (!inDetails)
       return;
 
-    var storyDetails = $('#sd-' + id);
     var left = 0;
 
     document.body.classList.remove('details-active');
@@ -299,10 +284,6 @@ APP.Main = (function() {
         by: '...',
         time: 0
       });
-      // var storyWrapper = document.createElement('div');
-      // storyWrapper.classList.add('storyWrapper');
-      // storyWrapper.appendChild(story);
-      // mainFrag.appendChild(storyWrapper);
       mainFrag.appendChild(story);
 
       APP.Data.getStoryById(stories[i], onStoryData.bind(this, key));
