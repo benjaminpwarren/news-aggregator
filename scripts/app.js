@@ -232,21 +232,40 @@ APP.Main = (function() {
 
   });
 
+  var lastKnownScrollY = 0;
+  var ticking = false;
+
   main.addEventListener('scroll', function() {
+    lastKnownScrollY = main.scrollTop;
+    requestTick();
+  });
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updater);
+    }
+    ticking = true;
+  }
+
+  function updater() {
+
+    ticking = false;
+
+    var currentScrollY = lastKnownScrollY; //main.scrollTop;
 
     var header = $('header');
     var headerTitles = header.querySelector('.header__title-wrapper');
-    var scrollTopCapped = Math.min(70, main.scrollTop);
+    var scrollTopCapped = Math.min(70, currentScrollY);
     var scaleString = 'scale(' + (1 - (scrollTopCapped / 300)) + ')';
 
-    if (scrollTopCapped < 70) {
+    //if (scrollTopCapped < 70) {
       header.style.height = (156 - scrollTopCapped) + 'px';
       headerTitles.style.webkitTransform = scaleString;
       headerTitles.style.transform = scaleString;
-    }
+    //}
 
     // Add a shadow to the header.
-    if (main.scrollTop > 70)
+    if (currentScrollY > 70)
       document.body.classList.add('raised');
     else
       document.body.classList.remove('raised');
@@ -254,9 +273,10 @@ APP.Main = (function() {
     // Check if we need to load the next batch of stories.
     var loadThreshold = (main.scrollHeight - main.offsetHeight -
         LAZY_LOAD_THRESHOLD);
-    if (main.scrollTop > loadThreshold)
+    if (currentScrollY > loadThreshold)
       loadStoryBatch();
-  });
+
+  };
 
   function loadStoryBatch() {
 
