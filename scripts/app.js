@@ -227,7 +227,7 @@ APP.Main = (function() {
     // I just wanted to test what happens if touchstart
     // gets canceled. Hope it doesn't block scrolling on mobiles...
     if (Math.random() > 0.97) {
-      evt.preventDefault();
+      //evt.preventDefault();
     }
 
   });
