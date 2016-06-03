@@ -277,9 +277,17 @@ APP.Main = (function() {
 
     storyLoadCount = count;
 
-    var mainFrag = document.createDocumentFragment();
-
     var end = storyStart + count;
+
+    var mainTemplate = document.createElement('template');
+    var storyElems = [];
+
+    var storyTemp = storyTemplate({
+        title: '...',
+        score: '-',
+        by: '...',
+        time: 0
+      });
 
     for (var i = storyStart; i < end; i++) {
 
@@ -287,21 +295,12 @@ APP.Main = (function() {
         return;
 
       var key = String(stories[i]);
-      var story = document.createElement('div');
-      story.setAttribute('id', 's-' + key);
-      story.classList.add('story');
-      story.innerHTML = storyTemplate({
-        title: '...',
-        score: '-',
-        by: '...',
-        time: 0
-      });
-      mainFrag.appendChild(story);
-
+      storyElems.push('<div id="s-' + key + '" class="story">' + storyTemp + '</div>');
       APP.Data.getStoryById(stories[i], onStoryData.bind(this, key));
     }
 
-    main.appendChild(mainFrag);
+    mainTemplate.innerHTML = storyElems.join('');
+    main.appendChild(mainTemplate.content);
 
     // Add our delegated event listener for story clicks.
     main.addEventListener('click', (function(e){
