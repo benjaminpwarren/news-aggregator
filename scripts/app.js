@@ -65,16 +65,19 @@ APP.Main = (function() {
    */
   function onStoryData (key, details) {
 
-    details.time *= 1000;
+    requestAnimationFrame(function(){
+      details.time *= 1000;
 
-    var story = document.getElementById('s-' + key);
-    var html = storyTemplate(details);
-    story.innerHTML = html;
-    story.addEventListener('click', onStoryClick.bind(this, details));
-    story.classList.add('clickable');
+      var story = document.getElementById('s-' + key);
+      var html = storyTemplate(details);
+      story.innerHTML = html;
+      story.addEventListener('click', onStoryClick.bind(this, details));
+      story.classList.add('clickable');
 
-    // Tick down. When zero we can batch in the next load.
-    storyLoadCount--;
+      // Tick down. When zero we can batch in the next load.
+      storyLoadCount--;
+
+    });
   }
 
   function onStoryClick(details) {
