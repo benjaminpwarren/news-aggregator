@@ -20,6 +20,12 @@ APP.Data = (function() {
   var HN_TOPSTORIES_URL = HN_API_BASE + '/v0/topstories.json';
   var HN_STORYDETAILS_URL = HN_API_BASE + '/v0/item/[ID].json';
 
+  var worker = new Worker('scripts/dataWorker.js');
+  var requestCallbacks = [];
+  worker.addEventListener('message', function(e){
+    requestCallbacks[e.data.callbackId]({'target':{'response':e.data.response}});
+  });
+
   function getTopStories(callback) {
     request(HN_TOPSTORIES_URL, function(evt) {
       callback(evt.target.response);
@@ -45,11 +51,12 @@ APP.Data = (function() {
   }
 
   function request(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'json';
-    xhr.onload = callback;
-    xhr.send();
+    var data = {
+      'url': url,
+      'callbackId': requestCallbacks.length
+    };
+    requestCallbacks.push(callback);
+    worker.postMessage(data);
   }
 
   return {
