@@ -71,7 +71,7 @@ APP.Main = (function() {
       var story = document.getElementById('s-' + key);
       var html = storyTemplate(details);
       story.innerHTML = html;
-      story.addEventListener('click', onStoryClick.bind(this, details));
+      story.setAttribute('data-details', JSON.stringify(details));
       story.classList.add('clickable');
 
       // Tick down. When zero we can batch in the next load.
@@ -302,6 +302,20 @@ APP.Main = (function() {
     }
 
     main.appendChild(mainFrag);
+
+    // Add our delegated event listener for story clicks.
+    main.addEventListener('click', (function(e){
+      if (e.target.matches('.story.clickable,.story.clickable *')) {
+        e.stopPropagation();
+
+        var story = (function(el){
+          while ((el = el.parentElement) && !el.matches('.story.clickable'));
+          return el;
+        })(e.target);
+
+        onStoryClick.call(this, JSON.parse(story.getAttribute('data-details')));
+      }
+    }).bind(this));
 
     storyStart += count;
 
