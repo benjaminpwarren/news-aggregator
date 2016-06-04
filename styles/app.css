@@ -92,15 +92,9 @@ a {
   opacity: 0.54;
 }
 
-body.details-active .story__title,
-body.details-active .story__by,
-body.details-active .story__score {
+body.details-active main {
   transition: opacity 0.5s ease-out;
-  opacity: 0 !important;
-}
-
-body.details-active .story {
-  background: linear-gradient(to bottom, #FFF 0%, #FFF 100%);
+  opacity: 0;
 }
 
 body.raised .header {
@@ -159,6 +153,8 @@ main.loading {
   position: absolute;
   left: 0;
   bottom: 0;
+  right: 0;
+  top: 0;
   border-bottom: 1px solid #dedede;
 }
 
@@ -242,11 +238,6 @@ main.loading {
 
 .slide-wipe {
   -webkit-transform:translateX(-100vw); transform: translateX(-100vw);
-}
-
-.story-details * {
-  will-change: transform;
-  transform: translateZ(0);
 }
 
 .story-details__content {
