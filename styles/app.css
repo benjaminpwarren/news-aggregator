@@ -104,8 +104,7 @@ body.details-active .story {
 }
 
 body.raised .header {
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.16),
-      0px 2px 5px 0px rgba(0, 0, 0, 0.23);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.39);
 }
 
 main {
@@ -198,10 +197,7 @@ main.loading {
   text-align: center;
   line-height: 40px;
 
-  box-shadow:
-      0px 2px 5px 0px rgba(0, 0, 0, 0.06),
-      0px 2px 5px 0px rgba(0, 0, 0, 0.08),
-      0px 2px 7px 0px rgba(0, 0, 0, 0.10);
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.24);
 }
 
 .story-details {
@@ -231,10 +227,7 @@ main.loading {
   height: 100%;
   background: white;
   z-index: 2;
-  box-shadow:
-      0px 2px 5px 0px rgba(0, 0, 0, 0.06),
-      0px 2px 5px 0px rgba(0, 0, 0, 0.08),
-      0px 2px 7px 0px rgba(0, 0, 0, 0.10);
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.24);
 
   overflow: hidden;
   transition: opacity 0.3s ease-out;
