@@ -147,35 +147,8 @@ APP.Main = (function() {
 
     inDetails = true;
 
-    var left = null;
-
     document.body.classList.add('details-active');
-    storyDetails.style.opacity = 1;
-
-    function animate () {
-
-      // Find out where it currently is.
-      var storyDetailsPosition = storyDetails.getBoundingClientRect();
-
-      // Set the left value if we don't have one already.
-      if (left === null)
-        left = storyDetailsPosition.left;
-
-      // Now figure out where it needs to go.
-      left += (0 - storyDetailsPosition.left) * 0.1;
-
-      // Set up the next bit of the animation if there is more to do.
-      if (Math.abs(left) > 0.5)
-        requestAnimationFrame(animate);
-      else
-        left = 0;
-
-      // And update the styles. Wait, is this a read-write cycle?
-      // I hope I don't trigger a forced synchronous layout!
-      storyDetails.style.left = left + 'px';
-    }
-
-    requestAnimationFrame(animate);
+    storyDetails.classList.add('slide-wipe');
   }
 
   function hideStory() {
@@ -183,35 +156,10 @@ APP.Main = (function() {
     if (!inDetails)
       return;
 
-    var left = 0;
-
     document.body.classList.remove('details-active');
-    storyDetails.style.opacity = 0;
+    storyDetails.classList.remove('slide-wipe');
 
-    function animate () {
-
-      // Find out where it currently is.
-      var mainPosition = main.getBoundingClientRect();
-      var storyDetailsPosition = storyDetails.getBoundingClientRect();
-      var target = mainPosition.width + 100;
-
-      // Now figure out where it needs to go.
-      left += (target - storyDetailsPosition.left) * 0.1;
-
-      // Set up the next bit of the animation if there is more to do.
-      if (Math.abs(left - target) > 0.5) {
-        requestAnimationFrame(animate);
-      } else {
-        left = target;
-        inDetails = false;
-      }
-
-      // And update the styles. Wait, is this a read-write cycle?
-      // I hope I don't trigger a forced synchronous layout!
-      storyDetails.style.left = left + 'px';
-    }
-
-    requestAnimationFrame(animate);
+    inDetails = false;
   }
 
   main.addEventListener('touchstart', function(evt) {
@@ -304,15 +252,11 @@ APP.Main = (function() {
 
     // Add our delegated event listener for story clicks.
     main.addEventListener('click', (function(e){
+
       if (e.target.matches('.story.clickable,.story.clickable *')) {
         e.stopPropagation();
-
-        var story = (function(el){
-          while ((el = el.parentElement) && !el.matches('.story.clickable'));
-          return el;
-        })(e.target);
-
-        onStoryClick.call(this, JSON.parse(story.getAttribute('data-details')));
+        var storyEl = e.target.closest('.story.clickable');
+        onStoryClick.call(this, JSON.parse(storyEl.getAttribute('data-details')));
       }
     }).bind(this));
 

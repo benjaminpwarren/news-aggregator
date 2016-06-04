@@ -224,10 +224,9 @@ main.loading {
       -webkit-align-content: stretch;
           align-content: stretch;
 
-  opacity: 0;
   position: fixed;
   top: 0;
-  left: calc(100% + 100px);
+  left: 100vw;
   width: 100%;
   height: 100%;
   background: white;
@@ -239,6 +238,17 @@ main.loading {
 
   overflow: hidden;
   transition: opacity 0.3s ease-out;
+
+}
+
+.story-details {
+  will-change: transform;
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
+}
+
+.slide-wipe {
+  -webkit-transform:translateX(-100vw); transform: translateX(-100vw);
 }
 
 .story-details * {
