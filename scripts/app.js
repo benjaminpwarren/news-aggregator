@@ -147,8 +147,10 @@ APP.Main = (function() {
 
     inDetails = true;
 
-    document.body.classList.add('details-active');
-    storyDetails.classList.add('slide-wipe');
+    requestAnimationFrame(function(){
+      document.body.classList.add('details-active');
+      storyDetails.classList.add('slide-wipe');
+    });
   }
 
   function hideStory() {
@@ -156,8 +158,10 @@ APP.Main = (function() {
     if (!inDetails)
       return;
 
-    document.body.classList.remove('details-active');
-    storyDetails.classList.remove('slide-wipe');
+    requestAnimationFrame(function(){
+      document.body.classList.remove('details-active');
+      storyDetails.classList.remove('slide-wipe');
+    });
 
     inDetails = false;
   }
@@ -248,7 +252,7 @@ APP.Main = (function() {
     }
 
     mainTemplate.innerHTML = storyElems.join('');
-    main.appendChild(mainTemplate.content);
+    requestAnimationFrame(function(){main.appendChild(mainTemplate.content)});
 
     // Add our delegated event listener for story clicks.
     main.addEventListener('click', (function(e){
@@ -268,7 +272,7 @@ APP.Main = (function() {
   APP.Data.getTopStories(function(data) {
     stories = data;
     loadStoryBatch();
-    main.classList.remove('loading');
+    requestAnimationFrame(function(){main.classList.remove('loading')});
   });
 
 })();
