@@ -57,6 +57,17 @@ APP.Main = (function() {
   var storyDetailsCommentTemplate =
       Handlebars.compile(tmplStoryDetailsComment);
 
+  var storyTemplateHtml = storyTemplate({
+    title: '...',
+    score: '-',
+    by: '...',
+    time: 0
+  });
+
+  var commentTemplateHtml = storyDetailsCommentTemplate({
+    by: '', text: 'Loading comment...'
+  });
+
   /**
    * As every single story arrives in shove its
    * content in at that exact moment. Feels like something
@@ -98,10 +109,6 @@ APP.Main = (function() {
 
     var storyDetailsHtml = storyDetailsTemplate(details);
     var kids = details.kids;
-    var commentHtml = storyDetailsCommentTemplate({
-      by: '', text: 'Loading comment...'
-    });
-
     storyDetails.innerHTML = storyDetailsHtml;
 
     commentsElement = storyDetails.querySelector('.js-comments');
@@ -122,7 +129,7 @@ APP.Main = (function() {
       comment = document.createElement('aside');
       comment.setAttribute('id', 'sdc-' + kids[k]);
       comment.classList.add('story-details__comment');
-      comment.innerHTML = commentHtml;
+      comment.innerHTML = commentTemplateHtml;
 
       // Update the comment with the live data.
       APP.Data.getStoryComment(kids[k], function(commentDetails) {
@@ -234,20 +241,13 @@ APP.Main = (function() {
     var mainTemplate = document.createElement('template');
     var storyElems = [];
 
-    var storyTemp = storyTemplate({
-        title: '...',
-        score: '-',
-        by: '...',
-        time: 0
-      });
-
     for (var i = storyStart; i < end; i++) {
 
       if (i >= stories.length)
         return;
 
       var key = String(stories[i]);
-      storyElems.push('<div id="s-' + key + '" class="story">' + storyTemp + '</div>');
+      storyElems.push('<div id="s-' + key + '" class="story">' + storyTemplateHtml + '</div>');
       APP.Data.getStoryById(stories[i], onStoryData.bind(this, key));
     }
 
