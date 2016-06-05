@@ -102,7 +102,6 @@ APP.Main = (function() {
     if (details.url)
       details.urlobj = new URL(details.url);
 
-    var comment;
     var commentsElement;
     var storyHeader;
     var storyContent;
@@ -124,26 +123,35 @@ APP.Main = (function() {
     if (typeof kids === 'undefined')
       return;
 
+    var commentTemplateElement = document.createElement('aside');
+    commentTemplateElement.classList.add('story-details__comment');
+    commentTemplateElement.innerHTML = commentTemplateHtml;
+
     for (var k = 0; k < kids.length; k++) {
 
-      comment = document.createElement('aside');
+      var comment = commentTemplateElement.cloneNode(true);
       comment.setAttribute('id', 'sdc-' + kids[k]);
-      comment.classList.add('story-details__comment');
-      comment.innerHTML = commentTemplateHtml;
+
+      requestAnimationFrame(function(commentsElement, comment){
+        return function(){commentsElement.appendChild(comment);};
+      }(commentsElement, comment));
 
       // Update the comment with the live data.
-      APP.Data.getStoryComment(kids[k], function(commentDetails) {
+      APP.Data.getStoryComment(kids[k], function(comment){
+        return function(commentDetails) {
 
         commentDetails.time *= 1000;
 
-        var comment = commentsElement.querySelector(
-            '#sdc-' + commentDetails.id);
-        comment.innerHTML = storyDetailsCommentTemplate(
+        var commentInnerHTML = storyDetailsCommentTemplate(
             commentDetails,
-            localeData);
-      });
+            localeData
+          );
 
-      commentsElement.appendChild(comment);
+        requestAnimationFrame(function(){
+          comment.innerHTML = commentInnerHTML;
+        });
+      };}(comment));
+
     }
   }
 
