@@ -280,7 +280,10 @@ APP.Main = (function() {
   APP.Data.getTopStories(function(data) {
     stories = data;
     loadStoryBatch();
-    requestAnimationFrame(function(){main.classList.remove('loading')});
+    requestAnimationFrame(function(){
+      main.classList.remove('loading');
+      $('#storyOpacityScreen').classList.add('story-opacity-screen');
+    });
   });
 
 })();
