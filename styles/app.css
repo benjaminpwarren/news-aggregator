@@ -139,7 +139,6 @@ main.loading {
 .story {
   padding: 16px 16px 16px 72px;
   background: #FFF;
-  background: linear-gradient(to bottom, #FFF 0%,#F4F4F4 100%);
   position: relative;
   min-height: 90px;
   cursor: pointer;
@@ -348,24 +347,32 @@ footer a {
   font-weight: 500;
 }
 
-.story__score {
-  background: linear-gradient(to top, rgba(153, 138, 101, 1) 0%, rgba(255, 179, 0, 1) 100%);
-  background-attachment: fixed;
-  z-index:2;
-}
+ @media only screen and (min-width: 800px) {
 
-.story-opacity-screen {
-  pointer-events: none;
-  background: linear-gradient(to top, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, 0) 100%);
-  position:absolute;
-  top:86px;
-  height:calc(100vh - 86px - 40px); /* 86px = min header-height, 40px = footer height*/
-  width:calc(100vw);
-  left:0;
-  z-index:1;
-}
+  .story {
+    background: linear-gradient(to bottom, #FFF 0%,#F4F4F4 100%);
+  }
 
-.story__by {
-  position:absolute;
-  z-index:1;
+  .story__score {
+    background: linear-gradient(to top, rgba(153, 138, 101, 1) 0%, rgba(255, 179, 0, 1) 100%);
+    background-attachment: fixed;
+    z-index:2;
+  }
+
+  .story-opacity-screen {
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, 0) 100%);
+    position:absolute;
+    top:86px;
+    height:calc(100vh - 86px - 40px);
+    width:calc(100vw);
+    left:0;
+    z-index:1;
+  }
+
+  .story__by {
+    position:absolute;
+    z-index:1;
+  }
+
 }
